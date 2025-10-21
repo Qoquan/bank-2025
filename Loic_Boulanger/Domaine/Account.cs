@@ -1,4 +1,4 @@
-﻿namespace DefaultNamespace;
+﻿namespace Loic_Boulanger.Domaine;
 
 public abstract class Account
 {

@@ -1,6 +1,6 @@
-﻿namespace DefaultNamespace;
+﻿namespace Loic_Boulanger.Domaine;
 
-ublic class SavingAccount : Account
+public class SavingAccount : Account
 {
     public DateTime DateLastWithdraw { get; set; }
 

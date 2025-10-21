@@ -1,4 +1,6 @@
-﻿namespace DefaultNamespace;
+﻿using LoïcBoulanger2.Domain;
+
+namespace Loic_Boulanger.Domaine;
 
 public class Bank
 {

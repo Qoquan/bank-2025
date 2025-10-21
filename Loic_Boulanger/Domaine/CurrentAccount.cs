@@ -1,4 +1,4 @@
-﻿namespace DefaultNamespace;
+﻿using Loic_Boulanger.Domaine;
 
 namespace LoïcBoulanger2.Domain;
 
@@ -28,16 +28,18 @@ public class CurrentAccount : Account
 
         base.Withdraw(amount); // Call only once, after checks
     }
-    
+
     protected override double CalculInterets()
     {
         if (Balance <= 0)
         {
-            return (Balance *0.03);
+            return (Balance * 0.03);
         }
         else
         {
             return Balance * 0.0975;
         }
+
         return Balance * 0.045;
     }
+}

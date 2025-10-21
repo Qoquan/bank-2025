@@ -1,4 +1,5 @@
-﻿namespace DefaultNamespace;
+﻿namespace Loic_Boulanger.Domaine;
+
 
 public class Person
 {
