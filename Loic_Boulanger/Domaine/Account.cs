@@ -1,76 +1,78 @@
-﻿namespace Loic_Boulanger.Domaine;
-
-public interface IAccount
+﻿namespace Loic_Boulanger.Domaine
 {
-	double Balance { get; }           // Lecture seule du solde
-	void Deposit(double amount);      // Méthode de dépôt
-	void Withdraw(double amount);     // Méthode de retrait
-}
-
-public interface IBankAccount : IAccount 
-{
-	string Number { get; }            // Lecture seule du numéro de compte
-	Person Owner { get;  }             // Lecture seule du propriétaire
-	void ApplyInterest();            // Méthode d'application des intérêts
-}
-
-
-public abstract class Account:IBankAccount
-
-{
-    // --- Propriétés publiques ---
-    public required Number { get; set; }               // Numéro de compte
-    
-    public double Balance { get; private set; }      // Solde (lecture seule)
-    
-    public required Owner { get; set; } 
-    
-    // --- Constructeur ---
-    
-    public Account(string number, Person owner, double creditLine)
+    // --- Interface de base pour un compte ---
+    public interface IAccount
     {
-        Number = number;
-        Owner = owner;
-        Balance = 0.0;
-    }
-    // --- Méthode pour déposer de l'argent ---
-    public void Deposit(double amount)
-    {
-        if (amount <= 0)
-        {
-            Console.WriteLine("Le montant du dépôt doit être positif.");
-            return;
-        }
-
-        Balance += amount;
-        Console.WriteLine($"Dépôt de {amount:C} effectué. Nouveau solde : {Balance:C}");
-    }
-    // --- Méthode pour retirer de l'argent ---
-    public virtual void Withdraw(double amount)
-    {
-        if (amount <= 0)
-        {
-            Console.WriteLine("Le montant du retrait doit être positif.");
-            return;
-        }
-
-        if (Balance - amount < 0)
-        {
-            Console.WriteLine("Fonds insuffisants. Retrait refusé.");
-            return;
-        }
-
-        Balance -= amount;
-        Console.WriteLine($"Retrait de {amount:C} effectué. Nouveau solde : {Balance:C}");
+        double Balance { get; }           // Lecture seule du solde
+        void Deposit(double amount);      // Méthode de dépôt
+        void Withdraw(double amount);     // Méthode de retrait
     }
 
-    // ✅ Méthode abstraite protégée
-    protected abstract double CalculInterest();
-
-    public void ApplyInterest()
+    // --- Interface d’un compte bancaire ---
+    public interface IBankAccount : IAccount
     {
-        double interest = CalculInterest();
-        Balance += interest;
-        Console.WriteLine($"Intérêts de {interest:C} appliqués. Nouveau solde : {Balance:C}");
+        string Number { get; }            // Lecture seule du numéro de compte
+        Person Owner { get; }             // Lecture seule du propriétaire
+        void ApplyInterest();             // Méthode d’application des intérêts
+    }
+
+    // --- Classe abstraite représentant un compte ---
+    public abstract class Account : IBankAccount
+    {
+        // --- Propriétés publiques ---
+        public string Number { get; private set; }    // Numéro de compte (lecture seule)
+        public double Balance { get; protected set; } // Solde (accessible aux classes dérivées)
+        public Person Owner { get; private set; }     // Propriétaire (lecture seule)
+
+        // --- Constructeur ---
+        protected Account(string number, Person owner)
+        {
+            Number = number;
+            Owner = owner;
+            Balance = 0.0;
+        }
+
+        // --- Méthode pour déposer de l’argent ---
+        public void Deposit(double amount)
+        {
+            if (amount <= 0)
+            {
+                Console.WriteLine("Le montant du dépôt doit être positif.");
+                return;
+            }
+
+            Balance += amount;
+            Console.WriteLine($"Dépôt de {amount:C} effectué. Nouveau solde : {Balance:C}");
+        }
+
+        // --- Méthode pour retirer de l’argent ---
+        public virtual void Withdraw(double amount)
+        {
+            if (amount <= 0)
+            {
+                Console.WriteLine("Le montant du retrait doit être positif.");
+                return;
+            }
+
+            if (Balance - amount < 0)
+            {
+                Console.WriteLine("Fonds insuffisants. Retrait refusé.");
+                return;
+            }
+
+            Balance -= amount;
+            Console.WriteLine($"Retrait de {amount:C} effectué. Nouveau solde : {Balance:C}");
+        }
+
+        // --- Méthode abstraite pour calculer les intérêts ---
+        protected abstract double CalculInterest();
+
+        // --- Application des intérêts ---
+        public void ApplyInterest()
+        {
+            double interest = CalculInterest();
+            Balance += interest;
+            Console.WriteLine($"Intérêts de {interest:C} appliqués. Nouveau solde : {Balance:C}");
+        }
     }
 }

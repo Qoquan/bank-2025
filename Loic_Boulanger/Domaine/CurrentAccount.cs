@@ -1,44 +1,50 @@
-﻿using Loic_Boulanger.Domaine;
+﻿using System;
 
-namespace LoïcBoulanger2.Domain;
-
-public class CurrentAccount : Account
+namespace Loic_Boulanger.Domaine
 {
-    public double CreditLine { get; private set; }
-
-    public CurrentAccount(string number, Person owner, double creditLine)
-        : base(number, owner, creditLine)
+    public class CurrentAccount : Account
     {
-        CreditLine = creditLine;
-    }
+        public double CreditLine { get; private set; }
 
-    public override void Withdraw(double amount)
-    {
-        if (amount <= 0)
+        public CurrentAccount(string number, Person owner, double creditLine)
+            : base(number, owner)
         {
-            Console.WriteLine("Le montant du retrait doit être positif.");
-            return;
+            if (creditLine < 0)
+                throw new ArgumentException("La ligne de crédit doit être positive.");
+            
+            CreditLine = creditLine;
         }
 
-        if (Balance - amount < -CreditLine)
+        public override void Withdraw(double amount)
         {
-            Console.WriteLine("Fonds insuffisants (limite de découvert atteinte). Retrait refusé.");
-            return;
+            if (amount <= 0)
+            {
+                Console.WriteLine("Le montant du retrait doit être positif.");
+                return;
+            }
+
+            if (Balance - amount < -CreditLine)
+            {
+                Console.WriteLine("Fonds insuffisants (limite de découvert atteinte). Retrait refusé.");
+                return;
+            }
+
+            Balance -= amount; // Décrémente directement le solde
+            Console.WriteLine($"Retrait de {amount:C} effectué. Nouveau solde : {Balance:C}");
         }
 
-        base.Withdraw(amount); // Call only once, after checks
-    }
+        protected override double CalculInterest()
+        {
+            // Exemple simple : pas d’intérêt sur compte courant si solde négatif
+            if (Balance <= 0)
+                return 0.0;
 
-    protected override double CalculInterest()
-    {
-        if (Balance <= 0)
-        {
-            return (Balance * 0.03);
+            return Balance * 0.001; // 0,1 % d’intérêt positif sur le solde
         }
-        else
+
+        public override string ToString()
         {
-            return Balance * 0.0975;
+            return $"[Compte Courant] N° {Number} - Propriétaire : {Owner} - Solde : {Balance:C} - Découvert autorisé : {CreditLine:C}";
         }
-        
     }
 }

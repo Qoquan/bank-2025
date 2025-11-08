@@ -1,16 +1,33 @@
-﻿namespace Loic_Boulanger.Domaine;
-
-public class SavingAccount : Account
+﻿
+namespace Loic_Boulanger.Domaine
 {
-    public DateTime DateLastWithdraw { get; set; }
+    public class SavingsAccount : Account
+    {
+        public DateTime? DateLastWithdraw { get; private set; }
 
-    public SavingAccount(string number, Person owner, double creditLine = 0)
-        : base(number, owner, creditLine)
-    {
-    }
-    // Taux fixe de 4,5 %
-    protected override double CalculInterest()
-    {
-        return Balance * 0.045;
+        public SavingsAccount(string number, Person owner)
+            : base(number, owner)
+        {
+        }
+
+        // Taux fixe de 4,5 %
+        protected override double CalculInterest()
+        {
+            return Balance * 0.045;
+        }
+
+        // On enregistre la date du dernier retrait
+        public override void Withdraw(double amount)
+        {
+            base.Withdraw(amount);
+
+            if (amount > 0 && Balance >= 0)
+                DateLastWithdraw = DateTime.Now;
+        }
+
+        public override string ToString()
+        {
+            return $"[Compte Épargne] N° {Number} - Propriétaire : {Owner} - Solde : {Balance:C}";
+        }
     }
 }
