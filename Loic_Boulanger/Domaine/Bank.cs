@@ -35,9 +35,9 @@ namespace Loic_Boulanger.Domaine
 
             // --- Abonnement à l'événement NegativeBalanceEvent ---
             if (account is CurrentAccount acc)
-            {
-                acc.NegativeBalanceEvent += NegativeBalanceAction;
-            }
+        {
+            acc.NegativeBalanceEvent += NegativeBalanceAction;
+        }
 
             Console.WriteLine($"✅ Compte n°{account.Number} ajouté avec succès à la banque {Name}.");
         }

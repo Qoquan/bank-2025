@@ -1,7 +1,7 @@
 ﻿namespace Loic_Boulanger.Domaine
 {
-    //  Déclaration du délégué
-        public delegate void NegativeBalanceDelegate(Account account);
+    //  Déclaration du délégué généralisé
+        public delegate void Action<Account>(Account account);
         
 
     // --- Interface de base pour un compte ---

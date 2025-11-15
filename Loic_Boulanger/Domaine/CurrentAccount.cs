@@ -29,7 +29,7 @@ namespace Loic_Boulanger.Domaine
             
             CreditLine = creditLine;
         }
-        public event NegativeBalanceDelegate? NegativeBalanceEvent;
+        public event Action<Account>? NegativeBalanceEvent;
 
         public override void Withdraw(double amount)
         {
