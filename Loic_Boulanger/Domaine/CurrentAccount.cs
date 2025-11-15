@@ -5,7 +5,7 @@ namespace Loic_Boulanger.Domaine
     public class CurrentAccount : Account
     {
         private double creditLine;
-
+        public event NegativeBalanceDelegate NegativeBalanceEvent;
         public double CreditLine
         {
             get => creditLine;
@@ -45,6 +45,11 @@ namespace Loic_Boulanger.Domaine
             }
 
             Balance -= amount; // Décrémente directement le solde
+            if (Balance < 0)
+            {
+                NegativeBalanceEvent?.Invoke(this);
+            }
+            
             Console.WriteLine($"Retrait de {amount:C} effectué. Nouveau solde : {Balance:C}");
         }
 

@@ -16,20 +16,31 @@ namespace Loic_Boulanger.Domaine
             Name = name;
             Accounts = new Dictionary<string, IBankAccount>();
         }
+                // --- Méthode pour gérer l'événement ---
+        public void NegativeBalanceAction(Account account)
+        {
+            Console.WriteLine($"⚠️ Alerte : le compte n°{account.Number} de {account.Owner} est à découvert ! Solde actuel : {account.Balance:C}");
+        }
 
         // --- Méthode pour ajouter un compte ---
         public void AddAccount(IBankAccount account)
         {
-            if (Accounts.ContainsKey(account.Number))
+        if (Accounts.ContainsKey(account.Number))
             {
                 Console.WriteLine($"❌ Erreur : le compte n°{account.Number} existe déjà.");
                 return;
             }
 
             Accounts.Add(account.Number, account);
+
+            // --- Abonnement à l'événement NegativeBalanceEvent ---
+            if (account is CurrentAccount acc)
+            {
+                acc.NegativeBalanceEvent += NegativeBalanceAction;
+            }
+
             Console.WriteLine($"✅ Compte n°{account.Number} ajouté avec succès à la banque {Name}.");
         }
-
         // --- Méthode pour supprimer un compte ---
         public void DeleteAccount(string number)
         {
@@ -82,5 +93,6 @@ namespace Loic_Boulanger.Domaine
             Console.WriteLine($"💰 Somme totale des comptes de {owner.LastName} : {total:C}");
             return total;
         }
+        
     }
 }
